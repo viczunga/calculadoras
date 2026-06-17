@@ -29,23 +29,7 @@
 
 </script>
 <script>
-// Auto-resize: medimos ambos divs del RoadEQ
-function _sendH() {
-  var d1 = document.getElementById('teq-rdiv');
-  var d2 = document.getElementById('roadeq-wrap');
-  if (!d1 || !d2) return;
-  var h = (d1.getBoundingClientRect().height || d1.offsetHeight) +
-          (d2.getBoundingClientRect().height || d2.offsetHeight);
-  window.parent.postMessage({ iframeId: 'iframe-roadeq', height: Math.ceil(h) + 24 }, '*');
-}
-var _t = setInterval(_sendH, 250);
-setTimeout(function(){ clearInterval(_t); }, 15000);
-if (window.ResizeObserver) {
-  var ro = new ResizeObserver(function(){ _sendH(); clearInterval(_t); _t = setInterval(_sendH,250); setTimeout(function(){clearInterval(_t);},15000); });
-  var wrap = document.getElementById('roadeq-wrap');
-  if (wrap) ro.observe(wrap);
-}
-window.addEventListener('load', _sendH);
-</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.9/iframeResizer.contentWindow.min.js"></script>
 </body>
 </html>
