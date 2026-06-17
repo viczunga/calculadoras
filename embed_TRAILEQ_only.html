@@ -173,13 +173,24 @@ function iCalc(){var d1=+document.getElementById('i-d1').value||21,g1=+document.
 iUT1();iUT2();iUTc1();iUTc2();iUW1();iUW2();iUHum();
 
 
-// Auto-resize for iframe embedding
-function sendHeight() {
-  var h = document.getElementById('teq').scrollHeight + 40;
-  window.parent.postMessage({ iframeId: 'iframe-traileq', height: h }, '*');
+// Auto-resize v2 - robust polling + ResizeObserver
+function _sendH() {
+  var body = document.body;
+  var html = document.documentElement;
+  var h = Math.max(
+    body.scrollHeight, body.offsetHeight,
+    html.clientHeight, html.scrollHeight, html.offsetHeight
+  );
+  window.parent.postMessage({ iframeId: 'iframe-traileq', height: h + 32 }, '*');
 }
-var ro = new ResizeObserver(sendHeight);
-ro.observe(document.getElementById('teq'));
-sendHeight();
+// Poll every 300ms for 10 seconds after load (catches dynamic content)
+var _itvl = setInterval(_sendH, 300);
+setTimeout(function(){ clearInterval(_itvl); }, 10000);
+// Also fire on any resize
+if (window.ResizeObserver) {
+  new ResizeObserver(_sendH).observe(document.body);
+}
+window.addEventListener('load', _sendH);
+_sendH();
 
 </script>
