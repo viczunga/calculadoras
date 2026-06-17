@@ -185,21 +185,7 @@ iUT1();iUT2();iUTc1();iUTc2();iUW1();iUW2();iUHum();
 
 </script>
 <script>
-// Auto-resize: medimos el div principal directamente
-function _sendH() {
-  var el = document.getElementById('teq');
-  if (!el) return;
-  var h = el.getBoundingClientRect().height || el.offsetHeight;
-  window.parent.postMessage({ iframeId: 'iframe-traileq', height: Math.ceil(h) + 24 }, '*');
-}
-// Polling durante 15 segundos para capturar cambios dinámicos (resultados, secciones)
-var _t = setInterval(_sendH, 250);
-setTimeout(function(){ clearInterval(_t); }, 15000);
-// ResizeObserver para cambios después del polling
-if (window.ResizeObserver) {
-  new ResizeObserver(function(){ _sendH(); clearInterval(_t); _t = setInterval(_sendH,250); setTimeout(function(){clearInterval(_t);},15000); }).observe(document.getElementById('teq'));
-}
-window.addEventListener('load', _sendH);
-</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.9/iframeResizer.contentWindow.min.js"></script>
 </body>
 </html>
