@@ -40,7 +40,37 @@ html, body {
 
 </script>
 <script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.9/iframeResizer.contentWindow.min.js"></script>
+(function(){
+  var FID='iframe-roadeq', last=0;
+  function H(){
+    var b=document.body, e=document.documentElement;
+    return Math.max(b.scrollHeight,b.offsetHeight,e.scrollHeight,e.offsetHeight,e.clientHeight);
+  }
+  function send(force){
+    var h=H();
+    if(force||Math.abs(h-last)>1){
+      last=h;
+      try{ if(window.parent) window.parent.postMessage({iframeId:FID,height:h},'*'); }catch(err){}
+    }
+  }
+  document.addEventListener('DOMContentLoaded',function(){send(true);});
+  window.addEventListener('load',function(){
+    send(true);
+    setTimeout(function(){send(true);},150);
+    setTimeout(function(){send(true);},500);
+  });
+  window.addEventListener('resize',function(){send(true);});
+  if(window.ResizeObserver){ try{ new ResizeObserver(function(){send(false);}).observe(document.body); }catch(e){} }
+  try{
+    new MutationObserver(function(){send(false);})
+      .observe(document.body,{childList:true,subtree:true,attributes:true,characterData:true});
+  }catch(e){}
+  document.addEventListener('click',function(){
+    setTimeout(function(){send(true);},60);
+    setTimeout(function(){send(true);},240);
+  });
+  send(true);
+})();
+</script>
 </body>
 </html>
