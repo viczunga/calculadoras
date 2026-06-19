@@ -60,6 +60,7 @@ html, body {
     setTimeout(function(){send(true);},500);
   });
   window.addEventListener('resize',function(){send(true);});
+  window.addEventListener('message',function(e){ if(e.data&&e.data.action==='remeasure'){ send(true); } });
   if(window.ResizeObserver){ try{ new ResizeObserver(function(){send(false);}).observe(document.body); }catch(e){} }
   try{
     new MutationObserver(function(){send(false);})
