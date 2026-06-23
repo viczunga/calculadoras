@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calendario de Carreras de Trail — 30 Grados</title>
+<style>html,body{margin:0;padding:0;background:#FBFEF9;}#rcal{padding:0 4px;}</style>
+</head>
+<body>
+<div id="rcal">
+<div class="rcal-toggle">
+  <button id="cardsBtn" class="active" title="Vista tarjetas">🗂️ Tarjetas</button>
+  <button id="listBtn" title="Vista lista">☰ Lista</button>
+</div>
+<div id="race-events"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Zilla+Slab:wght@600;700&display=swap');
+#rcal *{box-sizing:border-box;margin:0;padding:0}
+#rcal{max-width:820px;margin:0 auto;background:transparent;color:#0E273C;font-family:'Hanken Grotesk',system-ui,Arial,sans-serif}
+#rcal .rcal-toggle{display:flex;gap:8px;margin-bottom:1.5rem}
+#rcal .rcal-toggle button{font-size:13px;text-transform:uppercase;letter-spacing:1px;padding:9px 18px;border-radius:999px;border:1px solid #E2E2D8;background:#fff;color:#54636f;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-weight:700;transition:all .2s}
+#rcal .rcal-toggle button.active{background:#D90368;color:#fff;border-color:#D90368}
+#rcal #race-events{display:flex;flex-direction:column;gap:14px}
+#rcal .month-header{font-family:'Zilla Slab',serif;font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin:1.75rem 0 .25rem;color:#4A306D}
+#rcal .month-header:first-child{margin-top:0}
+#rcal .event-card{display:flex;background:#fff;border:1px solid #ECEAE0;border-radius:18px;overflow:hidden;box-shadow:0 10px 28px rgba(14,39,60,.05);transition:border-color .2s,box-shadow .2s}
+#rcal .event-card:hover{border-color:#D90368;box-shadow:0 14px 34px rgba(217,3,104,.12)}
+#rcal .event-img{width:32%;min-height:170px;position:relative;flex-shrink:0;overflow:hidden;background:#0E273C}
+#rcal .event-img img{width:100%;height:100%;object-fit:cover}
+#rcal .event-img.is-logo{display:flex;align-items:center;justify-content:center;padding:18px;background:#fff}
+#rcal .event-img.is-logo img{width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain}
+#rcal .event-img.is-logo::after{display:none}
+#rcal .event-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top, rgba(14,39,60,.55), rgba(14,39,60,0))}
+#rcal .type-badge{position:absolute;bottom:10px;left:10px;background:#D90368;color:#fff;padding:4px 12px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-radius:999px;z-index:1}
+#rcal .event-body{flex:1;padding:1.25rem 1.5rem}
+#rcal .event-body h3{margin:0 0 6px;font-family:'Zilla Slab',serif;font-size:1.45rem;font-weight:700;color:#0E273C}
+#rcal .meta{color:#7a8893;font-size:13px;letter-spacing:.5px;margin-bottom:10px}
+#rcal .distance-pill{display:inline-block;background:#E4F4F6;color:#087F8C;padding:5px 14px;border-radius:999px;font-size:13px;font-weight:700;letter-spacing:.5px;margin-right:6px;margin-bottom:6px}
+#rcal .elevation{margin:10px 0;color:#0E273C;font-size:14px;font-weight:700}
+#rcal .elevation .up{color:#D90368}
+#rcal .elevation .dn{color:#9aa7b0}
+#rcal .footer{display:flex;align-items:center;gap:14px;margin-top:12px;flex-wrap:wrap}
+#rcal .footer span{color:#9aa7b0;font-size:12px;text-transform:uppercase;letter-spacing:1px}
+#rcal .footer .btn{background:#D90368;border:2px solid #D90368;color:#fff;padding:9px 18px;border-radius:999px;text-decoration:none;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:1px;font-family:'Hanken Grotesk',sans-serif;transition:background .2s,border-color .2s}
+#rcal .footer .btn:hover{background:#b80257;border-color:#b80257}
+#rcal .footer .logo{height:38px;margin-left:auto;border-radius:6px;background:#fff;padding:3px}
+#rcal .list-row{background:#fff;border:1px solid #ECEAE0;border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:0.92rem;color:#0E273C;transition:border-color .2s}
+#rcal .list-row:hover{border-color:#D90368}
+#rcal .list-row .lr-date{font-family:'Zilla Slab',serif;font-weight:700;color:#4A306D;min-width:120px}
+#rcal .list-row .lr-name{font-weight:700;color:#0E273C}
+#rcal .list-row .lr-loc{color:#7a8893;font-size:13px}
+#rcal .list-row .lr-elev{color:#7a8893;font-size:13px}
+#rcal .list-row .distance-pill{padding:3px 10px;font-size:12px}
+#rcal .list-row .lr-org{color:#9aa7b0;font-size:12px;font-style:italic}
+#rcal .list-row .btn{padding:7px 14px;font-size:12px;margin-left:auto;background:#D90368;border:1px solid #D90368;color:#fff;text-decoration:none;border-radius:999px;font-weight:700;text-transform:uppercase;letter-spacing:1px;white-space:nowrap}
+#rcal .list-row .btn:hover{background:#b80257}
+#rcal .rcal-loading{text-align:center;color:#7a8893;padding:2rem;font-size:14px;letter-spacing:1px;text-transform:uppercase}
+@media(max-width:768px){#rcal .event-card{flex-direction:column}#rcal .event-img{width:100%;height:160px}#rcal .event-img.is-logo{height:140px}#rcal .list-row{font-size:0.88rem}#rcal .list-row .btn{margin-left:0;width:100%;text-align:center}}
+</style>
+<script>
+(function(){
+const sheetURL='https://docs.google.com/spreadsheets/d/e/2PACX-1vTcAAJwvDv3OggjuEM-BKFvJgatXlQYcPut6pkNwQPOqXmcEuXoSp-2aymzSQp0KcuRBknO23s51XZ0/pub?gid=792188839&single=true&output=csv';
+const DEFAULTS={'default':'https://cdn.prod.website-files.com/55a6e6c712415d60144fc72d/69406585242b1f5181c23606_generic%20image%20event.jpg'};
+function defaultImageFor(tipo){return DEFAULTS['default'];}
+const fullMonthNames=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+let currentView='cards';
+let parsedRows=[];
+const container=document.getElementById('race-events');
+const cardsBtn=document.getElementById('cardsBtn');
+const listBtn=document.getElementById('listBtn');
+container.innerHTML='<div class="rcal-loading">Cargando carreras…</div>';
+function formatEventDate(fecha){const [m,d,y]=fecha.split('/');return `${d} ${fullMonthNames[m-1]} ${y}`;}
+function pickImage(foto,logo,tipo){
+  if(foto&&foto.trim())return {src:foto.trim(),isLogo:false};
+  if(logo&&logo.trim()&&/^https?:\/\//i.test(logo.trim()))return {src:logo.trim(),isLogo:true};
+  return {src:defaultImageFor(tipo),isLogo:false};
+}
+function render(){
+container.innerHTML='';
+let currentMonthKey='';
+parsedRows.forEach(row=>{
+if(!row[0])return;
+const fecha=row[0],tipo=row[1],evento=row[2],distancia=row[3],lugar=row[4],enlace=row[5],organizador=row[6],logo=row[7],foto=row[8],asc=row[9],des=row[10];
+const [m,,y]=fecha.split('/');
+const monthKey=`${fullMonthNames[m-1]} ${y}`;
+if(monthKey!==currentMonthKey){currentMonthKey=monthKey;const h=document.createElement('h2');h.className='month-header';h.textContent=monthKey;container.appendChild(h);}
+const pills=(distancia||'').split(',').map(d=>`<span class="distance-pill">${d.trim()}</span>`).join('');
+if(currentView==='cards'){
+const im=pickImage(foto,logo,tipo);
+container.innerHTML+=`<div class="event-card"><div class="event-img${im.isLogo?' is-logo':''}"><img src="${im.src}" alt="${evento}" loading="lazy" onerror="this.onerror=null;this.src='${defaultImageFor(tipo)}';this.parentNode.className='event-img';">${tipo?`<span class="type-badge">${tipo}</span>`:''}</div><div class="event-body"><h3>${evento}</h3><div class="meta">${formatEventDate(fecha)} &nbsp;•&nbsp; 📍 ${lugar||''}</div><div>${pills}</div><div class="elevation"><span class="up">⬆ ${asc||'—'} m</span> &nbsp;&nbsp; <span class="dn">⬇ ${des||'—'} m</span></div><div class="footer"><span>${organizador?`Organiza: ${organizador}`:''}</span>${enlace?`<a class="btn" target="_blank" rel="noopener" href="${enlace}">Ver evento →</a>`:''}</div></div></div>`;
+}else{
+container.innerHTML+=`<div class="list-row"><span class="lr-date">${formatEventDate(fecha)}</span><span class="lr-name">${evento}</span>${pills}<span class="lr-loc">📍 ${lugar||''}</span><span class="lr-elev">⬆ ${asc||'—'} ⬇ ${des||'—'}</span>${organizador?`<span class="lr-org">Organiza: ${organizador}</span>`:''}${enlace?`<a class="btn" target="_blank" rel="noopener" href="${enlace}">Ver →</a>`:''}</div>`;
+}
+});
+if(window.parentIFrame)window.parentIFrame.size();
+}
+Papa.parse(sheetURL,{download:true,complete:r=>{parsedRows=r.data.slice(1);render();},error:()=>{container.innerHTML='<div class="rcal-loading">No se pudieron cargar las carreras. Intenta recargar la página.</div>';}});
+cardsBtn.onclick=()=>{currentView='cards';cardsBtn.classList.add('active');listBtn.classList.remove('active');render();};
+listBtn.onclick=()=>{currentView='list';listBtn.classList.add('active');cardsBtn.classList.remove('active');render();};
+})();
+</script>
+
+<script>
+(function(){
+  function rep(){var h=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight,document.body.offsetHeight);try{if(window.parent)window.parent.postMessage({iframeId:'iframe-cal',height:h},'*');}catch(e){}}
+  window.addEventListener('load',rep);
+  window.addEventListener('resize',rep);
+  if(window.ResizeObserver){try{new ResizeObserver(rep).observe(document.body);}catch(e){}}
+  setTimeout(rep,400);setTimeout(rep,1200);setTimeout(rep,2600);
+})();
+</script>
+</body>
+</html>
