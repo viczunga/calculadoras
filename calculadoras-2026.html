@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Zilla+Slab:wght@500;600;700&display=swap');
+html,body{margin:0;padding:0;background:transparent;}
+#hub{max-width:720px;margin:0 auto;font-family:'Hanken Grotesk',system-ui,Arial,sans-serif;color:#0e273c;}
+#hub *{box-sizing:border-box;}
+#chooser{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:560px){#chooser{grid-template-columns:1fr;}}
+.card{background:#fff;border:1px solid #eceae0;border-radius:14px;padding:22px;display:flex;flex-direction:column;}
+.card.trail{border-top:3px solid #4a306d;}
+.card.road{border-top:3px solid #087f8c;}
+.badge{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Zilla Slab',serif;font-weight:700;font-size:18px;color:#fff;margin-bottom:14px;}
+.trail .badge,.trail .btn{background:#4a306d;}
+.road .badge,.road .btn{background:#087f8c;}
+.title{font-family:'Zilla Slab',serif;font-weight:700;font-size:22px;margin:0 0 8px;}
+.desc{color:#54636f;font-size:15px;line-height:1.5;margin:0 0 18px;flex:1;}
+.btn{border:none;border-radius:8px;padding:12px;font-weight:600;font-size:15px;color:#fff;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;font-family:'Hanken Grotesk',system-ui,sans-serif;}
+.btn:hover{filter:brightness(1.1);}
+#calc{display:none;}
+.switch{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+.pill{background:transparent;border:1px solid #eceae0;color:#54636f;border-radius:999px;padding:8px 22px;font-weight:600;font-size:15px;cursor:pointer;font-family:'Hanken Grotesk',system-ui,sans-serif;}
+.pill.on-trail{background:#4a306d;border-color:#4a306d;color:#fff;}
+.pill.on-road{background:#087f8c;border-color:#087f8c;color:#fff;}
+.back{margin-left:auto;background:transparent;border:none;color:#9a9a9a;font-size:14px;cursor:pointer;font-family:'Hanken Grotesk',system-ui,sans-serif;}
+.back:hover{color:#0e273c;}
+.frame{width:100%;border:none;display:none;}
+</style>
+</head>
+<body>
+<div id="hub">
+  <div id="chooser">
+    <div class="card trail">
+      <div class="badge">EQ</div>
+      <h3 class="title">TrailEQ</h3>
+      <p class="desc">Predice tu tiempo y ritmo en carreras de trail y ultra seg&uacute;n distancia, desnivel, tecnicidad, altitud y m&aacute;s.</p>
+      <button class="btn" onclick="openCalc('trail')">Abrir calculadora Trail</button>
+    </div>
+    <div class="card road">
+      <div class="badge">EQ</div>
+      <h3 class="title">RoadEQ</h3>
+      <p class="desc">Calcula tu VDOT, tus zonas de entrenamiento y ritmos a partir de un tiempo o ritmo conocido en ruta o pista.</p>
+      <button class="btn" onclick="openCalc('road')">Abrir calculadora Road</button>
+    </div>
+  </div>
+
+  <div id="calc">
+    <div class="switch">
+      <button class="pill" id="p-trail" onclick="openCalc('trail')">Trail</button>
+      <button class="pill" id="p-road" onclick="openCalc('road')">Road</button>
+      <button class="back" onclick="goHome()">&#8617; Volver</button>
+    </div>
+    <iframe id="f-trail" class="frame" data-src="https://viczunga.github.io/calculadoras/embed_TRAILEQ_2026.html" scrolling="no" title="Calculadora TrailEQ" style="min-height:500px;"></iframe>
+    <iframe id="f-road" class="frame" data-src="https://viczunga.github.io/calculadoras/embed_ROADEQ_2026.html" scrolling="no" title="Calculadora RoadEQ" style="min-height:500px;"></iframe>
+  </div>
+</div>
+
+<script>
+(function(){
+  var heights={trail:500,road:500};
+  var ids={'iframe-trail':'trail','iframe-roadeq':'road'};
+  var f={trail:document.getElementById('f-trail'),road:document.getElementById('f-road')};
+
+  window.addEventListener('message',function(e){
+    if(!e.data||!e.data.iframeId)return;
+    var k=ids[e.data.iframeId];
+    if(!k||!e.data.height)return;
+    heights[k]=e.data.height;
+    f[k].style.height=e.data.height+'px';
+    reportUp(true);
+  });
+
+  window.openCalc=function(which){
+    document.getElementById('chooser').style.display='none';
+    document.getElementById('calc').style.display='block';
+    ['trail','road'].forEach(function(k){
+      if(k===which){
+        if(!f[k].src && f[k].dataset.src){ f[k].src=f[k].dataset.src; }
+        f[k].style.display='block';
+        f[k].style.height=heights[k]+'px';
+        try{ f[k].contentWindow.postMessage({action:'remeasure'},'*'); }catch(err){}
+        setTimeout(function(){ try{ f[k].contentWindow.postMessage({action:'remeasure'},'*'); }catch(err){} },200);
+      } else {
+        f[k].style.display='none';
+      }
+    });
+    document.getElementById('p-trail').className='pill'+(which==='trail'?' on-trail':'');
+    document.getElementById('p-road').className='pill'+(which==='road'?' on-road':'');
+    try{ history.replaceState(null,'','#'+which); }catch(err){}
+    reportUp(true);
+  };
+
+  window.goHome=function(){
+    document.getElementById('calc').style.display='none';
+    document.getElementById('chooser').style.display='grid';
+    try{ history.replaceState(null,'',location.pathname); }catch(err){}
+    reportUp(true);
+  };
+
+  var FID='iframe-calc', last=0;
+  function H(){var b=document.body,e=document.documentElement;return Math.max(b.scrollHeight,b.offsetHeight,e.scrollHeight,e.offsetHeight);}
+  function reportUp(force){var h=H();if(force||Math.abs(h-last)>1){last=h;try{if(window.parent)window.parent.postMessage({iframeId:FID,height:h},'*');}catch(err){}}}
+  window.addEventListener('load',function(){reportUp(true);setTimeout(function(){reportUp(true);},200);setTimeout(function(){reportUp(true);},600);});
+  window.addEventListener('resize',function(){reportUp(true);});
+  if(window.ResizeObserver){try{new ResizeObserver(function(){reportUp(false);}).observe(document.body);}catch(err){}}
+
+  var hsh=(location.hash||'').replace('#','');
+  if(hsh==='trail'||hsh==='road'){ openCalc(hsh); } else { reportUp(true); }
+})();
+</script>
+</body>
+</html>
