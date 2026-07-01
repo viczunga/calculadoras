@@ -35,6 +35,7 @@ html, body {
   </div>
   <p class="st" id="i-s1">Rendimiento Conocido</p>
   <div class="ca">
+    <div style="margin:0 0 .8rem"><select id="i-race1" onchange="iRApply(1)" style="width:100%;padding:9px 10px;background:#111;color:#e8e8e8;border:1px solid #333;border-radius:6px;font-size:13px"></select></div>
     <div class="r2">
       <div><div class="fl" id="i-ld1">Distancia (km)</div><input type="number" id="i-d1" value="21" min="1" max="300"></div>
       <div><div class="fl" id="i-lg1">Desnivel + (m)</div><input type="number" id="i-g1" value="1200" min="0"></div>
@@ -74,6 +75,7 @@ html, body {
   </div>
   <p class="st" id="i-s2">Carrera Objetivo</p>
   <div class="ca">
+    <div style="margin:0 0 .8rem"><select id="i-race2" onchange="iRApply(2)" style="width:100%;padding:9px 10px;background:#111;color:#e8e8e8;border:1px solid #333;border-radius:6px;font-size:13px"></select></div>
     <div class="r2">
       <div><div class="fl" id="i-ld2">Distancia (km)</div><input type="number" id="i-d2" value="100" min="1" max="300"></div>
       <div><div class="fl" id="i-lg2">Desnivel + (m)</div><input type="number" id="i-g2" value="6000" min="0"></div>
@@ -170,8 +172,8 @@ html, body {
 <script>
 var IL='es';
 var ILg={
-  es:{sub:'Predictor de Trail Running',s1:'Rendimiento Conocido',s2:'Carrera Objetivo',s3:'Predicción TrailEQ',ld1:'Distancia (km)',lg1:'Desnivel + (m)',ll1:'Desnivel - (m)',lt1:'Tiempo llegada',lter1:'Perfil Terreno',ltec1:'Tecnicidad',lw1:'Condiciones',ld2:'Distancia (km)',lg2:'Desnivel + (m)',ll2:'Desnivel - (m)',ldh:'Habilidad bajada',lter2:'Perfil Terreno',ltec2:'Tecnicidad',lw2:'Condiciones',lhum:'Humedad',laa:'Altitud Media (m)',lam:'Altitud Max (m)',lah:'Altitud Casa (m)',ln:'Nocturno (%)',lp:'Mochila (kg)',albl:'Factores Avanzados',rl:'Tiempo Estimado de Llegada',ol:'Optimista',el:'Esperado',cl:'Conservador',rceq:'Km-Esfuerzo',rccarbs:'Carbohidratos',rcpace:'Ritmo Estimado',pcl:'Subidas',pfl:'Plano',pdl:'Bajadas',pavl:'Vel. promedio',rcimp:'Impacto Factores',ntag:'⚠️ TRAMO NOCTURNO',nnote:'Esta carrera incluirá tramos nocturnos.',t1l:'Ondulado',t1r:'Grandes Subidas',tc1l:'Suave',tc1r:'Extremo',huml:'Seco',humr:'Tropical',dh:['Evita bajar','Promedio','Bueno bajando','Elite'],tvls:['Muy Ondulado','Ondulado','Mixto','Grandes Subidas','Extremo'],tcvls:['Suave','Ligero','Moderado','Rocoso','EXTREMO'],wvls:['❄️','🥶','⛅','☀️','🌡️','🔥'],wts:['< 0°C','0-8°C','8-18°C','18-25°C','25-32°C','> 32°C'],hvls:['Seco','Moderada','Húmedo','Tropical'],lvls:['Principiante','Recreativo','Recreativo+','Competitivo','Muy Fuerte','Elite'],lc:['#888','#5a8828','#74ab35','#9B4FE8','#e8a020','#e85020'],ik:{terrain:'Terreno',weather:'Clima',altitude:'Altitud',ultra:'Fatiga Ultra',night:'Noche',pack:'Mochila'},wl:'Predicción supera corte típico de 100M.',sp:'Vel:'},
-  en:{sub:'Trail Race Predictor',s1:'Known Performance',s2:'Target Race',s3:'TrailEQ Prediction',ld1:'Distance (km)',lg1:'Gain (m)',ll1:'Loss (m)',lt1:'Finish Time',lter1:'Terrain Profile',ltec1:'Technicality',lw1:'Conditions',ld2:'Distance (km)',lg2:'Gain (m)',ll2:'Loss (m)',ldh:'Descent Skill',lter2:'Terrain Profile',ltec2:'Technicality',lw2:'Conditions',lhum:'Humidity',laa:'Avg Alt (m)',lam:'Max Alt (m)',lah:'Home Alt (m)',ln:'Night (%)',lp:'Pack (kg)',albl:'Advanced Factors',rl:'Estimated Finish Time',ol:'Optimistic',el:'Expected',cl:'Conservative',rceq:'Km-Effort',rccarbs:'Carbohydrates',rcpace:'Estimated Pace',pcl:'Climbs',pfl:'Flats',pdl:'Descents',pavl:'Avg speed',rcimp:'Factor Impact',ntag:'⚠️ NIGHT SECTION',nnote:'This race will include night sections.',t1l:'Rolling',t1r:'Big Climbs',tc1l:'Smooth',tc1r:'Extreme',huml:'Dry',humr:'Tropical',dh:['Avoids Descending','Average','Good Descender','Elite'],tvls:['Very Rolling','Rolling','Mixed','Big Climbs','Extreme'],tcvls:['Smooth','Light','Moderate','Rocky','EXTREME'],wvls:['❄️','🥶','⛅','☀️','🌡️','🔥'],wts:['< 32°F','32-46°F','46-64°F','64-77°F','77-90°F','> 90°F'],hvls:['Dry','Moderate','Humid','Tropical'],lvls:['Beginner','Recreational','Recreational+','Competitive','Very Strong','Elite'],lc:['#888','#5a8828','#74ab35','#9B4FE8','#e8a020','#e85020'],ik:{terrain:'Terrain',weather:'Weather',altitude:'Altitude',ultra:'Ultra Fatigue',night:'Night',pack:'Pack'},wl:'Prediction exceeds typical 100M cutoff.',sp:'Speed:'}
+  es:{rdb1:'— Cargar carrera de referencia (opcional) —',rdb2:'— Elegir carrera objetivo (opcional) —',sub:'Predictor de Trail Running',s1:'Rendimiento Conocido',s2:'Carrera Objetivo',s3:'Predicción TrailEQ',ld1:'Distancia (km)',lg1:'Desnivel + (m)',ll1:'Desnivel - (m)',lt1:'Tiempo llegada',lter1:'Perfil Terreno',ltec1:'Tecnicidad',lw1:'Condiciones',ld2:'Distancia (km)',lg2:'Desnivel + (m)',ll2:'Desnivel - (m)',ldh:'Habilidad bajada',lter2:'Perfil Terreno',ltec2:'Tecnicidad',lw2:'Condiciones',lhum:'Humedad',laa:'Altitud Media (m)',lam:'Altitud Max (m)',lah:'Altitud Casa (m)',ln:'Nocturno (%)',lp:'Mochila (kg)',albl:'Factores Avanzados',rl:'Tiempo Estimado de Llegada',ol:'Optimista',el:'Esperado',cl:'Conservador',rceq:'Km-Esfuerzo',rccarbs:'Carbohidratos',rcpace:'Ritmo Estimado',pcl:'Subidas',pfl:'Plano',pdl:'Bajadas',pavl:'Vel. promedio',rcimp:'Impacto Factores',ntag:'⚠️ TRAMO NOCTURNO',nnote:'Esta carrera incluirá tramos nocturnos.',t1l:'Ondulado',t1r:'Grandes Subidas',tc1l:'Suave',tc1r:'Extremo',huml:'Seco',humr:'Tropical',dh:['Evita bajar','Promedio','Bueno bajando','Elite'],tvls:['Muy Ondulado','Ondulado','Mixto','Grandes Subidas','Extremo'],tcvls:['Suave','Ligero','Moderado','Rocoso','EXTREMO'],wvls:['❄️','🥶','⛅','☀️','🌡️','🔥'],wts:['< 0°C','0-8°C','8-18°C','18-25°C','25-32°C','> 32°C'],hvls:['Seco','Moderada','Húmedo','Tropical'],lvls:['Principiante','Recreativo','Recreativo+','Competitivo','Muy Fuerte','Elite'],lc:['#888','#5a8828','#74ab35','#9B4FE8','#e8a020','#e85020'],ik:{terrain:'Terreno',weather:'Clima',altitude:'Altitud',ultra:'Fatiga Ultra',night:'Noche',pack:'Mochila'},wl:'Predicción supera corte típico de 100M.',sp:'Vel:'},
+  en:{rdb1:'— Load reference race (optional) —',rdb2:'— Choose target race (optional) —',sub:'Trail Race Predictor',s1:'Known Performance',s2:'Target Race',s3:'TrailEQ Prediction',ld1:'Distance (km)',lg1:'Gain (m)',ll1:'Loss (m)',lt1:'Finish Time',lter1:'Terrain Profile',ltec1:'Technicality',lw1:'Conditions',ld2:'Distance (km)',lg2:'Gain (m)',ll2:'Loss (m)',ldh:'Descent Skill',lter2:'Terrain Profile',ltec2:'Technicality',lw2:'Conditions',lhum:'Humidity',laa:'Avg Alt (m)',lam:'Max Alt (m)',lah:'Home Alt (m)',ln:'Night (%)',lp:'Pack (kg)',albl:'Advanced Factors',rl:'Estimated Finish Time',ol:'Optimistic',el:'Expected',cl:'Conservative',rceq:'Km-Effort',rccarbs:'Carbohydrates',rcpace:'Estimated Pace',pcl:'Climbs',pfl:'Flats',pdl:'Descents',pavl:'Avg speed',rcimp:'Factor Impact',ntag:'⚠️ NIGHT SECTION',nnote:'This race will include night sections.',t1l:'Rolling',t1r:'Big Climbs',tc1l:'Smooth',tc1r:'Extreme',huml:'Dry',humr:'Tropical',dh:['Avoids Descending','Average','Good Descender','Elite'],tvls:['Very Rolling','Rolling','Mixed','Big Climbs','Extreme'],tcvls:['Smooth','Light','Moderate','Rocky','EXTREME'],wvls:['❄️','🥶','⛅','☀️','🌡️','🔥'],wts:['< 32°F','32-46°F','46-64°F','64-77°F','77-90°F','> 90°F'],hvls:['Dry','Moderate','Humid','Tropical'],lvls:['Beginner','Recreational','Recreational+','Competitive','Very Strong','Elite'],lc:['#888','#5a8828','#74ab35','#9B4FE8','#e8a020','#e85020'],ik:{terrain:'Terrain',weather:'Weather',altitude:'Altitude',ultra:'Ultra Fatigue',night:'Night',pack:'Pack'},wl:'Prediction exceeds typical 100M cutoff.',sp:'Speed:'}
 };
 function iL(l){IL=l;var t=ILg[l];document.getElementById('i-bes').classList.toggle('active',l==='es');document.getElementById('i-ben').classList.toggle('active',l==='en');['sub','s1','s2','ld1','lg1','ll1','lt1','lter1','ltec1','lw1','ld2','lg2','ll2','ldh','lter2','ltec2','lw2','lhum','laa','lam','lah','ln','lp','albl','rl','ol','el','cl','rceq','rccarbs','rcpace','pcl','pfl','pdl','pavl','rcimp','ntag','nnote','t1l','t1r','tc1l','tc1r','huml','humr'].forEach(function(k){var e=document.getElementById('i-'+k);if(e&&t[k])e.textContent=t[k];});t.dh.forEach(function(v,i){var e=document.getElementById('i-dh'+i);if(e)e.textContent=v;});iUT1();iUT2();iUTc1();iUTc2();iUW1();iUW2();iUHum();}
 function iDT(id,v,w,h){var c=document.getElementById(id);if(!c)return;var x=c.getContext('2d');x.clearRect(0,0,w,h);x.fillStyle='#f1ecf7';x.fillRect(0,0,w,h);var pts=[];if(v<=1){for(var i=0;i<=20;i++)pts.push([i/20*w,h*0.35+Math.sin(i*1.8)*h*0.28*(0.5+v*0.5)]);}else if(v==2){for(var i=0;i<=20;i++)pts.push([i/20*w,h*0.3+Math.sin(i)*h*0.35+Math.sin(i*3)*h*0.1]);}else{var pk=v==3?2:1;for(var i=0;i<=20;i++){var y=h*0.72;for(var p=0;p<pk;p++){var cx=(p+0.5)/pk;y-=Math.max(0,1-Math.abs(i/20-cx)*pk*2.2)*h*0.62;}pts.push([i/20*w,y]);}}x.beginPath();x.moveTo(0,h);pts.forEach(function(p){x.lineTo(p[0],p[1]);});x.lineTo(w,h);x.closePath();var g=x.createLinearGradient(0,0,0,h);g.addColorStop(0,'#7B1FD4');g.addColorStop(1,'#4a306d');x.fillStyle=g;x.fill();}
@@ -229,5 +231,58 @@ iUT1();iUT2();iUTc1();iUTc2();iUW1();iUW2();iUHum();
   send(true);
 })();
 </script>
+
+<script>
+/* TrailEQ RaceDB v2.0 - verificado jul 2026. w:winner mid:mediana bk:fondo(h) */
+var IRDB=[
+{i:"flat10k",n:"Trail 10K plano",c:"",d:10,g:80,l:80,ter:0,tec:0,we:2,hm:1,aa:100,am:150,np:0,w:0.53,m:0.92,bk:1.35},
+{i:"coast10k",n:"10K costero ondulado",c:"",d:10,g:450,l:450,ter:2,tec:2,we:2,hm:1,aa:250,am:450,np:0,w:0.67,m:1.25,bk:1.9},
+{i:"nub10k",n:"Bosque Nuboso 10K",c:"CR",d:10,g:600,l:600,ter:2,tec:3,we:3,hm:3,aa:1400,am:1800,np:0,w:0.87,m:1.67,bk:2.5},
+{i:"vk10k",n:"Alpino 10K (VK+)",c:"FR",d:10,g:1000,l:200,ter:4,tec:3,we:1,hm:0,aa:1600,am:2200,np:0,w:0.92,m:1.83,bk:2.75},
+{i:"flat21k",n:"Media bosque plana",c:"",d:21,g:150,l:150,ter:0,tec:0,we:2,hm:1,aa:50,am:100,np:0,w:1.17,m:2.08,bk:3.0},
+{i:"moab21k",n:"Moab Trail Half",c:"US",d:21,g:500,l:500,ter:1,tec:2,we:3,hm:0,aa:1400,am:1600,np:0,w:1.42,m:2.75,bk:4.0},
+{i:"occ21k",n:"Media alpina (OCC)",c:"FR",d:21,g:1300,l:1300,ter:3,tec:2,we:2,hm:0,aa:1500,am:2000,np:0,w:1.83,m:3.67,bk:5.5},
+{i:"mv21k",n:"Bosque Nuboso 21K Monteverde",c:"CR",d:21,g:1250,l:1250,ter:3,tec:3,we:3,hm:3,aa:1400,am:1800,np:0,w:2.0,m:4.0,bk:6.0},
+{i:"vol21k",n:"Volcán 21K altura",c:"EC",d:21,g:1200,l:1200,ter:3,tec:3,we:1,hm:1,aa:3400,am:4200,np:0,w:2.17,m:4.33,bk:6.5},
+{i:"flat42k",n:"Maratón trail rodador",c:"",d:42,g:600,l:600,ter:1,tec:1,we:2,hm:1,aa:150,am:300,np:0,w:2.83,m:5.0,bk:7.0},
+{i:"coast42k",n:"Maratón costero",c:"US",d:42,g:1200,l:1200,ter:2,tec:1,we:2,hm:1,aa:200,am:500,np:0,w:3.17,m:5.75,bk:8.0},
+{i:"mmb42k",n:"Marathon du Mont-Blanc",c:"FR",d:42,g:2540,l:2000,ter:3,tec:2,we:2,hm:0,aa:1600,am:2130,np:0,w:3.58,m:7.0,bk:9.5},
+{i:"zeg42k",n:"Zegama-Aizkorri",c:"ES",d:42,g:2736,l:2736,ter:3,tec:3,we:2,hm:2,aa:900,am:1551,np:0,w:3.61,m:6.25,bk:7.9},
+{i:"pikes42k",n:"Pikes Peak Marathon",c:"US",d:42,g:2382,l:2382,ter:4,tec:3,we:1,hm:0,aa:3000,am:4302,np:0,w:3.6,m:7.5,bk:9.8},
+{i:"jfk50",n:"JFK 50 (rápida)",c:"US",d:50,g:350,l:450,ter:0,tec:0,we:2,hm:1,aa:150,am:500,np:0,w:3.33,m:6.0,bk:8.5},
+{i:"cyn50k",n:"Canyons 50K",c:"US",d:50,g:1700,l:1700,ter:2,tec:1,we:3,hm:0,aa:500,am:1100,np:0,w:3.75,m:7.0,bk:9.5},
+{i:"tara50k",n:"Tarawera 50K",c:"NZ",d:50,g:1400,l:1500,ter:2,tec:2,we:2,hm:2,aa:400,am:600,np:0,w:3.83,m:7.25,bk:10.0},
+{i:"chi54k",n:"Ultra Chirripó 54K",c:"CR",d:54,g:3400,l:3400,ter:4,tec:3,we:2,hm:3,aa:2400,am:3820,np:5,w:6.0,m:11.5,bk:15.0},
+{i:"spg50k",n:"Speedgoat 50K",c:"US",d:50,g:3500,l:3500,ter:4,tec:3,we:2,hm:0,aa:2900,am:3350,np:0,w:5.17,m:10.0,bk:13.5},
+{i:"fast80k",n:"80K desértico rápido",c:"US",d:80,g:1100,l:1800,ter:1,tec:1,we:3,hm:0,aa:800,am:1300,np:0,w:5.5,m:11.0,bk:15.5},
+{i:"utct80k",n:"Ultra-Trail Cape Town 80K",c:"ZA",d:80,g:3200,l:3200,ter:3,tec:2,we:3,hm:1,aa:400,am:1000,np:10,w:7.0,m:13.5,bk:18.0},
+{i:"ccc80k",n:"CCC (Courmayeur-Chamonix)",c:"IT/FR",d:80,g:4200,l:4200,ter:3,tec:2,we:1,hm:0,aa:1800,am:2537,np:20,w:9.33,m:18.0,bk:25.5},
+{i:"ultk80k",n:"Alpino extremo 80K (Matterhorn)",c:"CH",d:80,g:5200,l:5200,ter:4,tec:4,we:1,hm:0,aa:2400,am:3100,np:25,w:11.0,m:21.0,bk:29.0},
+{i:"flat100k",n:"100K plano (canal)",c:"",d:100,g:500,l:500,ter:0,tec:0,we:2,hm:1,aa:50,am:150,np:10,w:6.75,m:13.0,bk:18.0},
+{i:"hk100",n:"Vibram Hong Kong 100",c:"HK",d:100,g:5300,l:5300,ter:3,tec:2,we:3,hm:3,aa:300,am:950,np:20,w:9.5,m:22.0,bk:29.0},
+{i:"utmf100k",n:"Ultra Trail Mt. Fuji 100K",c:"JP",d:100,g:6500,l:6500,ter:3,tec:3,we:2,hm:2,aa:1100,am:1900,np:40,w:10.5,m:23.0,bk:31.0},
+{i:"tgc100k",n:"Transgrancanaria Classic",c:"ES",d:100,g:6300,l:6800,ter:3,tec:3,we:2,hm:1,aa:1000,am:1950,np:40,w:11.5,m:24.0,bk:30.0},
+{i:"miut115k",n:"Madeira MIUT 115K",c:"PT",d:115,g:7100,l:7100,ter:4,tec:4,we:2,hm:2,aa:1100,am:1861,np:35,w:12.5,m:27.0,bk:32.0},
+{i:"rr160",n:"Rocky Raccoon 100mi",c:"US",d:160,g:1500,l:1500,ter:0,tec:1,we:3,hm:2,aa:100,am:150,np:35,w:13.0,m:26.0,bk:29.5},
+{i:"jav160",n:"Javelina Jundred",c:"US",d:160,g:2400,l:2400,ter:1,tec:1,we:4,hm:0,aa:500,am:600,np:40,w:13.3,m:27.0,bk:29.5},
+{i:"ws100",n:"Western States 100",c:"US",d:161,g:5500,l:7000,ter:2,tec:2,we:4,hm:0,aa:1200,am:2660,np:30,w:13.77,m:24.5,bk:29.5},
+{i:"lv160",n:"Leadville Trail 100",c:"US",d:161,g:4800,l:4800,ter:2,tec:2,we:1,hm:0,aa:3100,am:3840,np:35,w:15.7,m:28.5,bk:29.9},
+{i:"utmb171",n:"UTMB Mont-Blanc",c:"FR/IT/CH",d:171,g:10000,l:10000,ter:4,tec:3,we:1,hm:0,aa:1800,am:2560,np:40,w:19.63,m:40.0,bk:46.0},
+{i:"hr160",n:"Hardrock 100",c:"US",d:164,g:10190,l:10190,ter:4,tec:4,we:1,hm:0,aa:3350,am:4282,np:40,w:21.55,m:39.87,bk:47.0},
+{i:"diag165",n:"Diagonale des Fous",c:"RE",d:165,g:10200,l:10700,ter:4,tec:4,we:3,hm:3,aa:1400,am:2411,np:45,w:23.0,m:48.0,bk:64.0}
+];
+function iRFmt(h){var hh=Math.floor(h),mm=Math.round((h-hh)*60);return hh+':'+(mm<10?'0':'')+mm;}
+function iRPop(sel,sec){var s=document.getElementById(sel);if(!s)return;var t=ILg[IL];
+ s.innerHTML='<option value="">'+(sec===1?t.rdb1:t.rdb2)+'</option>';
+ var gs={},ks=[];IRDB.forEach(function(r){var k=r.d<=15?'10K':r.d<=30?'21K':r.d<=45?'42K':r.d<=60?'50K':r.d<=90?'80K':r.d<=125?'100K':'160K+';if(!gs[k]){gs[k]=[];ks.push(k);}gs[k].push(r);});
+ ks.forEach(function(k){var og=document.createElement('optgroup');og.label=k;gs[k].forEach(function(r){var o=document.createElement('option');o.value=r.i;o.textContent=r.n+(r.c?' ('+r.c+')':'')+' · '+r.d+'K +'+r.g+'m · '+iRFmt(r.w)+'-'+iRFmt(r.bk);og.appendChild(o);});s.appendChild(og);});}
+function iRSet(id,v){var e=document.getElementById(id);if(e){e.value=v;if(e.getAttribute('oninput'))e.oninput();}}
+function iRApply(sec){var sel=document.getElementById(sec===1?'i-race1':'i-race2');var r=null;for(var j=0;j<IRDB.length;j++)if(IRDB[j].i===sel.value){r=IRDB[j];break;}if(!r)return;
+ if(sec===1){iRSet('i-d1',r.d);iRSet('i-g1',r.g);iRSet('i-l1',r.l);iRSet('i-ter1',r.ter);iRSet('i-tec1',r.tec);iRSet('i-w1',r.we);
+  var mh=Math.floor(r.m),mm2=Math.round((r.m-mh)*60);iRSet('i-th',mh);iRSet('i-tm',mm2);
+ }else{iRSet('i-d2',r.d);iRSet('i-g2',r.g);iRSet('i-l2',r.l);iRSet('i-ter2',r.ter);iRSet('i-tec2',r.tec);iRSet('i-w2',r.we);iRSet('i-hum',r.hm);iRSet('i-aa',r.aa);iRSet('i-am',r.am);iRSet('i-np',r.np);}}
+</script>
+
+<script>iRPop("i-race1",1);iRPop("i-race2",2);var _iL=iL;iL=function(x){_iL(x);iRPop("i-race1",1);iRPop("i-race2",2);};</script>
 </body>
 </html>
